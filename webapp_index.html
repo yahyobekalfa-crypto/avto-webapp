@@ -27,6 +27,16 @@
             border-radius: 5px;
             font-size: 16px;
         }
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: #3390ec;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -99,14 +109,10 @@
 <label>Telefon:</label>
 <input type="tel" id="phone" placeholder="+998901234567">
 
+<button onclick="yuborish()">YUBORISH</button>
+
 <script>
-    var tg = window.Telegram.WebApp;
-    tg.expand();
-    
-    tg.MainButton.text = "YUBORISH";
-    tg.MainButton.show();
-    
-    tg.MainButton.onClick(function(){
+    function yuborish() {
         var car = document.getElementById("car").value;
         var year = document.getElementById("year").value;
         var price = document.getElementById("price").value;
@@ -116,7 +122,7 @@
         var city = document.getElementById("city").value;
         var phone = document.getElementById("phone").value;
         
-        if(car == "" || year == "" || price == "" || phone == ""){
+        if(car == "" || year == "" || price == "" || phone == "") {
             alert("Barcha maydonlarni toldiring!");
             return;
         }
@@ -132,8 +138,19 @@
             phone: phone
         };
         
-        tg.sendData(JSON.stringify(data));
-    });
+        if(window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.sendData(JSON.stringify(data));
+        } else {
+            alert("Telegram orqali oching!");
+        }
+    }
+    
+    if(window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.expand();
+        window.Telegram.WebApp.MainButton.text = "YUBORISH";
+        window.Telegram.WebApp.MainButton.show();
+        window.Telegram.WebApp.MainButton.onClick(yuborish);
+    }
 </script>
 
 </body>
