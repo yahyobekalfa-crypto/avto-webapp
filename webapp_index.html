@@ -6,136 +6,135 @@
     <title>Avto E'lon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Arial,sans-serif;background:#f5f5f5;padding:15px;padding-bottom:100px}
-        h1{text-align:center;margin-bottom:20px}
-        .form-group{margin-bottom:15px}
-        label{display:block;margin-bottom:5px;font-weight:bold}
-        select,input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px}
-        textarea{height:80px}
-        .colors{display:flex;gap:10px;flex-wrap:wrap}
-        .color-btn{width:40px;height:40px;border-radius:50%;border:3px solid transparent;cursor:pointer}
-        .color-btn.selected{border-color:#3390ec}
+        body {
+            font-family: Arial;
+            padding: 20px;
+            background: #fff;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <h1>🚗 Avto E'lon</h1>
-    
-    <div class="form-group">
-        <label>🚗 Mashina</label>
-        <select id="car">
-            <option value="">Tanlang...</option>
-            <option value="matiz">Daewoo Matiz</option>
-            <option value="spark">Chevrolet Spark</option>
-            <option value="nexia">Daewoo Nexia</option>
-            <option value="cobalt">Chevrolet Cobalt</option>
-            <option value="lacetti">Chevrolet Lacetti</option>
-            <option value="malibu">Chevrolet Malibu</option>
-            <option value="damas">Daewoo Damas</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label>📅 Yili</label>
-        <select id="year"><option value="">Tanlang...</option></select>
-    </div>
-    
-    <div class="form-group">
-        <label>💰 Narxi (USD)</label>
-        <input type="number" id="price" placeholder="8500">
-    </div>
-    
-    <div class="form-group">
-        <label>🛣 Yurgan (km)</label>
-        <input type="number" id="mileage" placeholder="150000">
-    </div>
-    
-    <div class="form-group">
-        <label>🎨 Rangi</label>
-        <div class="colors">
-            <button type="button" class="color-btn" data-color="Oq" style="background:white;border:1px solid #ccc"></button>
-            <button type="button" class="color-btn" data-color="Qora" style="background:black"></button>
-            <button type="button" class="color-btn" data-color="Kumush" style="background:silver"></button>
-            <button type="button" class="color-btn" data-color="Ko'k" style="background:blue"></button>
-            <button type="button" class="color-btn" data-color="Qizil" style="background:red"></button>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label>🔧 Uzatish</label>
-        <select id="transmission">
-            <option value="">Tanlang...</option>
-            <option value="Mexanika">Mexanika</option>
-            <option value="Avtomat">Avtomat</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label>📍 Shahar</label>
-        <select id="city">
-            <option value="">Tanlang...</option>
-            <option value="Toshkent">Toshkent</option>
-            <option value="Samarqand">Samarqand</option>
-            <option value="Buxoro">Buxoro</option>
-            <option value="Namangan">Namangan</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label>📞 Telefon</label>
-        <input type="tel" id="phone" placeholder="+998901234567">
-    </div>
-    
-    <div class="form-group">
-        <label>📝 Qo'shimcha</label>
-        <textarea id="description" placeholder="Holati..."></textarea>
-    </div>
 
-    <script>
-        var tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
+<h2>🚗 Avto E'lon</h2>
+
+<label>Mashina:</label>
+<select id="car">
+    <option value="">Tanlang</option>
+    <option value="matiz">Matiz</option>
+    <option value="spark">Spark</option>
+    <option value="nexia">Nexia</option>
+    <option value="cobalt">Cobalt</option>
+    <option value="lacetti">Lacetti</option>
+    <option value="malibu">Malibu</option>
+    <option value="damas">Damas</option>
+</select>
+
+<label>Yili:</label>
+<select id="year">
+    <option value="">Tanlang</option>
+    <option value="2025">2025</option>
+    <option value="2024">2024</option>
+    <option value="2023">2023</option>
+    <option value="2022">2022</option>
+    <option value="2021">2021</option>
+    <option value="2020">2020</option>
+    <option value="2019">2019</option>
+    <option value="2018">2018</option>
+    <option value="2017">2017</option>
+    <option value="2016">2016</option>
+    <option value="2015">2015</option>
+    <option value="2010">2010</option>
+    <option value="2005">2005</option>
+    <option value="2000">2000</option>
+</select>
+
+<label>Narxi ($):</label>
+<input type="number" id="price" placeholder="8500">
+
+<label>Yurgan km:</label>
+<input type="number" id="mileage" placeholder="150000">
+
+<label>Rangi:</label>
+<select id="color">
+    <option value="">Tanlang</option>
+    <option value="Oq">Oq</option>
+    <option value="Qora">Qora</option>
+    <option value="Kumush">Kumush</option>
+    <option value="Ko'k">Ko'k</option>
+    <option value="Qizil">Qizil</option>
+</select>
+
+<label>Uzatish:</label>
+<select id="transmission">
+    <option value="">Tanlang</option>
+    <option value="Mexanika">Mexanika</option>
+    <option value="Avtomat">Avtomat</option>
+</select>
+
+<label>Shahar:</label>
+<select id="city">
+    <option value="">Tanlang</option>
+    <option value="Toshkent">Toshkent</option>
+    <option value="Samarqand">Samarqand</option>
+    <option value="Buxoro">Buxoro</option>
+    <option value="Namangan">Namangan</option>
+</select>
+
+<label>Telefon:</label>
+<input type="tel" id="phone" placeholder="+998901234567">
+
+<script>
+    var tg = window.Telegram.WebApp;
+    tg.expand();
+    
+    tg.MainButton.text = "YUBORISH";
+    tg.MainButton.show();
+    
+    tg.MainButton.onClick(function(){
+        var car = document.getElementById("car").value;
+        var year = document.getElementById("year").value;
+        var price = document.getElementById("price").value;
+        var mileage = document.getElementById("mileage").value;
+        var color = document.getElementById("color").value;
+        var transmission = document.getElementById("transmission").value;
+        var city = document.getElementById("city").value;
+        var phone = document.getElementById("phone").value;
         
-        var yearSelect = document.getElementById('year');
-        for(var y=2025;y>=2000;y--){
-            yearSelect.innerHTML+='<option value="'+y+'">'+y+'</option>';
+        if(car == "" || year == "" || price == "" || phone == ""){
+            alert("Barcha maydonlarni toldiring!");
+            return;
         }
         
-        var selectedColor='';
-        var colorBtns = document.querySelectorAll('.color-btn');
-        for(var i=0;i<colorBtns.length;i++){
-            colorBtns[i].onclick=function(){
-                for(var j=0;j<colorBtns.length;j++){
-                    colorBtns[j].classList.remove('selected');
-                }
-                this.classList.add('selected');
-                selectedColor=this.getAttribute('data-color');
-            };
-        }
+        var data = {
+            car: car,
+            year: year,
+            price: price,
+            mileage: mileage,
+            color: color,
+            transmission: transmission,
+            city: city,
+            phone: phone
+        };
         
-        tg.MainButton.setText('YUBORISH');
-        tg.MainButton.show();
-        
-        tg.MainButton.onClick(function(){
-            var data={
-                car:document.getElementById('car').value,
-                year:document.getElementById('year').value,
-                price:document.getElementById('price').value,
-                mileage:document.getElementById('mileage').value,
-                color:selectedColor,
-                transmission:document.getElementById('transmission').value,
-                city:document.getElementById('city').value,
-                phone:document.getElementById('phone').value,
-                description:document.getElementById('description').value||'-'
-            };
-            
-            if(!data.car||!data.year||!data.price||!data.phone){
-                tg.showAlert('Barcha maydonlarni toldiring!');
-                return;
-            }
-            
-            tg.sendData(JSON.stringify(data));
-        });
-    </script>
+        tg.sendData(JSON.stringify(data));
+    });
+</script>
+
 </body>
 </html>
