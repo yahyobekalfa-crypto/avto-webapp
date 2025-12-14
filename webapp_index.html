@@ -1,157 +1,525 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avto E'lon</title>
+    <title>AvtoElon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #f5f5f5);
+            color: var(--tg-theme-text-color, #000);
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #0088cc, #00aaff);
+            color: white;
             padding: 20px;
-            background: #fff;
-        }
-        h2 {
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        select, input {
-            width: 100%;
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .search-box {
+            display: flex;
+            gap: 10px;
             padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background: white;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #f0f0f0;
             font-size: 16px;
         }
-        button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: #3390ec;
+        .search-box button {
+            padding: 12px 20px;
+            background: #0088cc;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 16px;
         }
+        .filters {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background: #0088cc;
+            color: white;
+            border-color: #0088cc;
+        }
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .car-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #ddd;
+        }
+        .car-info {
+            padding: 10px;
+        }
+        .car-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .car-price {
+            color: #0088cc;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .car-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .premium-badge {
+            background: gold;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            text-decoration: none;
+        }
+        .nav-item.active { color: #0088cc; }
+        .nav-item span { font-size: 20px; margin-bottom: 4px; }
+        .add-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #0088cc, #00aaff);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0,136,204,0.4);
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: flex-end;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .car-detail {
+            display: none;
+        }
+        .car-detail.active {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 150;
+            overflow-y: auto;
+        }
+        .detail-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #ddd;
+        }
+        .detail-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0088cc;
+        }
+        .detail-specs {
+            padding: 15px;
+        }
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+        .contact-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 15px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .loading { text-align: center; padding: 40px; color: #666; }
     </style>
 </head>
 <body>
-
-<h2>🚗 Avto E'lon</h2>
-
-<label>Mashina:</label>
-<select id="car">
-    <option value="">Tanlang</option>
-    <option value="matiz">Matiz</option>
-    <option value="spark">Spark</option>
-    <option value="nexia">Nexia</option>
-    <option value="cobalt">Cobalt</option>
-    <option value="lacetti">Lacetti</option>
-    <option value="malibu">Malibu</option>
-    <option value="damas">Damas</option>
-</select>
-
-<label>Yili:</label>
-<select id="year">
-    <option value="">Tanlang</option>
-    <option value="2025">2025</option>
-    <option value="2024">2024</option>
-    <option value="2023">2023</option>
-    <option value="2022">2022</option>
-    <option value="2021">2021</option>
-    <option value="2020">2020</option>
-    <option value="2019">2019</option>
-    <option value="2018">2018</option>
-    <option value="2017">2017</option>
-    <option value="2016">2016</option>
-    <option value="2015">2015</option>
-    <option value="2010">2010</option>
-    <option value="2005">2005</option>
-    <option value="2000">2000</option>
-</select>
-
-<label>Narxi ($):</label>
-<input type="number" id="price" placeholder="8500">
-
-<label>Yurgan km:</label>
-<input type="number" id="mileage" placeholder="150000">
-
-<label>Rangi:</label>
-<select id="color">
-    <option value="">Tanlang</option>
-    <option value="Oq">Oq</option>
-    <option value="Qora">Qora</option>
-    <option value="Kumush">Kumush</option>
-    <option value="Ko'k">Ko'k</option>
-    <option value="Qizil">Qizil</option>
-</select>
-
-<label>Uzatish:</label>
-<select id="transmission">
-    <option value="">Tanlang</option>
-    <option value="Mexanika">Mexanika</option>
-    <option value="Avtomat">Avtomat</option>
-</select>
-
-<label>Shahar:</label>
-<select id="city">
-    <option value="">Tanlang</option>
-    <option value="Toshkent">Toshkent</option>
-    <option value="Samarqand">Samarqand</option>
-    <option value="Buxoro">Buxoro</option>
-    <option value="Namangan">Namangan</option>
-</select>
-
-<label>Telefon:</label>
-<input type="tel" id="phone" placeholder="+998901234567">
-
-<button onclick="yuborish()">YUBORISH</button>
-
-<script>
-    function yuborish() {
-        var car = document.getElementById("car").value;
-        var year = document.getElementById("year").value;
-        var price = document.getElementById("price").value;
-        var mileage = document.getElementById("mileage").value;
-        var color = document.getElementById("color").value;
-        var transmission = document.getElementById("transmission").value;
-        var city = document.getElementById("city").value;
-        var phone = document.getElementById("phone").value;
+    <!-- Main Page -->
+    <div id="mainPage">
+        <div class="header">
+            <h1>🚗 AvtoElon</h1>
+        </div>
         
-        if(car == "" || year == "" || price == "" || phone == "") {
-            alert("Barcha maydonlarni toldiring!");
-            return;
-        }
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Qidirish...">
+            <button onclick="search()">🔍</button>
+        </div>
         
-        var data = {
-            car: car,
-            year: year,
-            price: price,
-            mileage: mileage,
-            color: color,
-            transmission: transmission,
-            city: city,
-            phone: phone
-        };
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterBrand('')">Barchasi</button>
+            <button class="filter-btn" onclick="filterBrand('Chevrolet')">Chevrolet</button>
+            <button class="filter-btn" onclick="filterBrand('Toyota')">Toyota</button>
+            <button class="filter-btn" onclick="filterBrand('Hyundai')">Hyundai</button>
+            <button class="filter-btn" onclick="filterBrand('BMW')">BMW</button>
+            <button class="filter-btn" onclick="filterBrand('Mercedes')">Mercedes</button>
+        </div>
         
-        if(window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.sendData(JSON.stringify(data));
-        } else {
-            alert("Telegram orqali oching!");
-        }
-    }
+        <div class="cars-grid" id="carsGrid">
+            <div class="loading">Yuklanmoqda...</div>
+        </div>
+        
+        <button class="add-btn" onclick="openAddModal()">+</button>
+        
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <span>🏠</span>
+                Bosh sahifa
+            </a>
+            <a href="#" class="nav-item" onclick="showFavorites()">
+                <span>❤️</span>
+                Sevimlilar
+            </a>
+            <a href="#" class="nav-item" onclick="openAddModal()">
+                <span>➕</span>
+                Qo'shish
+            </a>
+            <a href="#" class="nav-item">
+                <span>👤</span>
+                Profil
+            </a>
+        </nav>
+    </div>
     
-    if(window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.expand();
-        window.Telegram.WebApp.MainButton.text = "YUBORISH";
-        window.Telegram.WebApp.MainButton.show();
-        window.Telegram.WebApp.MainButton.onClick(yuborish);
-    }
-</script>
-
+    <!-- Car Detail -->
+    <div id="carDetail" class="car-detail">
+        <button class="back-btn" onclick="closeDetail()">←</button>
+        <img class="detail-image" id="detailImage" src="">
+        <div class="detail-header">
+            <h2 id="detailTitle"></h2>
+            <div class="detail-price" id="detailPrice"></div>
+        </div>
+        <div class="detail-specs" id="detailSpecs"></div>
+        <button class="contact-btn" onclick="contact()">📞 Qo'ng'iroq qilish</button>
+    </div>
+    
+    <!-- Add Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yangi e'lon</h2>
+                <button class="modal-close" onclick="closeAddModal()">×</button>
+            </div>
+            <form id="addForm" onsubmit="submitCar(event)">
+                <div class="form-group">
+                    <label>Marka</label>
+                    <select id="brand" required>
+                        <option value="">Tanlang</option>
+                        <option>Chevrolet</option>
+                        <option>Toyota</option>
+                        <option>Hyundai</option>
+                        <option>Kia</option>
+                        <option>BMW</option>
+                        <option>Mercedes-Benz</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" id="model" placeholder="Masalan: Malibu" required>
+                </div>
+                <div class="form-group">
+                    <label>Yili</label>
+                    <input type="number" id="year" placeholder="2023" required>
+                </div>
+                <div class="form-group">
+                    <label>Narxi (USD)</label>
+                    <input type="number" id="price" placeholder="25000" required>
+                </div>
+                <div class="form-group">
+                    <label>Probeg (km)</label>
+                    <input type="number" id="mileage" placeholder="50000">
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="tel" id="phone" placeholder="+998901234567" required>
+                </div>
+                <button type="submit" class="submit-btn">E'lon berish</button>
+            </form>
+        </div>
+    </div>+ let carList = [];
+    <script>
+        // Telegram WebApp
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+        
+        // Sample data
+        const cars = [
+            { id: 1, brand: "Chevrolet", model: "Malibu", year: 2023, price: 32000, mileage: 5000, phone: "+998901234567", premium: true, fuel: "Benzin", transmission: "Avtomat", color: "Oq", region: "Toshkent" },
+            { id: 2, brand: "Chevrolet", model: "Cobalt", year: 2022, price: 14500, mileage: 25000, phone: "+998901234568", premium: false, fuel: "Metan", transmission: "Mexanika", color: "Kumush", region: "Andijon" },
+            { id: 3, brand: "Toyota", model: "Camry", year: 2021, price: 38000, mileage: 35000, phone: "+998901234569", premium: true, fuel: "Benzin", transmission: "Avtomat", color: "Qora", region: "Toshkent" },
+            { id: 4, brand: "Hyundai", model: "Sonata", year: 2022, price: 28000, mileage: 20000, phone: "+998901234570", premium: false, fuel: "Benzin", transmission: "Avtomat", color: "Ko'k", region: "Samarqand" },
+            { id: 5, brand: "BMW", model: "5 Series", year: 2019, price: 42000, mileage: 55000, phone: "+998901234571", premium: true, fuel: "Benzin", transmission: "Avtomat", color: "Qora", region: "Toshkent" },
+            { id: 6, brand: "Chevrolet", model: "Tracker", year: 2023, price: 25000, mileage: 3000, phone: "+998901234572", premium: false, fuel: "Benzin", transmission: "Avtomat", color: "Qizil", region: "Toshkent" },
+            { id: 7, brand: "Toyota", model: "Land Cruiser", year: 2020, price: 85000, mileage: 45000, phone: "+998901234573", premium: true, fuel: "Dizel", transmission: "Avtomat", color: "Oq", region: "Toshkent" },
+            { id: 8, brand: "Hyundai", model: "Tucson", year: 2023, price: 42000, mileage: 8000, phone: "+998901234574", premium: false, fuel: "Benzin", transmission: "Avtomat", color: "Kulrang", region: "Buxoro" },
+        ];
+        
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let filteredCars = [...cars];
+        
+        function renderCars() {
+            const grid = document.getElementById('carsGrid');
+            if (filteredCars.length === 0) {
+                grid.innerHTML = '<div class="loading">E\'lonlar topilmadi</div>';
+                return;
+            }
+            
+            // Sort premium first
+            filteredCars.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
+            
+            grid.innerHTML = filteredCars.map(car => `
+                <div class="car-card" onclick="openDetail(${car.id})">
+                    <img src="https://via.placeholder.com/200x120/ddd/666?text=${car.brand}" alt="${car.brand}">
+                    <div class="car-info">
+                        ${car.premium ? '<span class="premium-badge">⭐ PREMIUM</span>' : ''}
+                        <div class="car-title">${car.brand} ${car.model}</div>
+                        <div class="car-price">$${car.price.toLocaleString()}</div>
+                        <div class="car-details">${car.year} • ${car.mileage.toLocaleString()} km</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterBrand(brand) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (brand) {
+                filteredCars = cars.filter(c => c.brand === brand);
+            } else {
+                filteredCars = [...cars];
+            }
+            renderCars();
+        }
+        
+        function search() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            filteredCars = cars.filter(c => 
+                c.brand.toLowerCase().includes(query) || 
+                c.model.toLowerCase().includes(query)
+            );
+            renderCars();
+        }
+        
+        function openDetail(id) {
+            const car = cars.find(c => c.id === id);
+            if (!car) return;
+            
+            document.getElementById('detailImage').src = `https://via.placeholder.com/400x250/ddd/666?text=${car.brand}+${car.model}`;
+            document.getElementById('detailTitle').textContent = `${car.brand} ${car.model} (${car.year})`;
+            document.getElementById('detailPrice').textContent = `$${car.price.toLocaleString()}`;
+            
+            document.getElementById('detailSpecs').innerHTML = `
+                <div class="spec-row"><span>📅 Yil</span><span>${car.year}</span></div>
+                <div class="spec-row"><span>🛣 Probeg</span><span>${car.mileage.toLocaleString()} km</span></div>
+                <div class="spec-row"><span>⛽ Yoqilg'i</span><span>${car.fuel}</span></div>
+                <div class="spec-row"><span>🔧 Uzatma</span><span>${car.transmission}</span></div>
+                <div class="spec-row"><span>🎨 Rang</span><span>${car.color}</span></div>
+                <div class="spec-row"><span>📍 Joylashuv</span><span>${car.region}</span></div>
+                <div class="spec-row"><span>📞 Telefon</span><span>${car.phone}</span></div>
+            `;
+            
+            window.currentCar = car;
+            document.getElementById('carDetail').classList.add('active');
+        }
+        
+        function closeDetail() {
+            document.getElementById('carDetail').classList.remove('active');
+        }
+        
+        function contact() {
+            if (window.currentCar) {
+                window.location.href = `tel:${window.currentCar.phone}`;
+            }
+        }
+        
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+        
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+        }
+        
+        function submitCar(e) {
+            e.preventDefault();
+            const newCar = {
+                id: cars.length + 1,
+                brand: document.getElementById('brand').value,
+                model: document.getElementById('model').value,
+                year: parseInt(document.getElementById('year').value),
+                price: parseInt(document.getElementById('price').value),
+                mileage: parseInt(document.getElementById('mileage').value) || 0,
+                phone: document.getElementById('phone').value,
+                premium: false,
+                fuel: "Benzin",
+                transmission: "Avtomat",
+                color: "Noma'lum",
+                region: "Toshkent"
+            };
+            
+            cars.unshift(newCar);
+            filteredCars = [...cars];
+            
+            closeAddModal();
+            renderCars();
+            
+            // Send to Telegram
+            if (tg) {
+                tg.sendData(JSON.stringify(newCar));
+            }
+            
+            alert('✅ E\'lon qo\'shildi!');
+            document.getElementById('addForm').reset();
+        }
+        
+        function showFavorites() {
+            filteredCars = cars.filter(c => favorites.includes(c.id));
+            renderCars();
+        }
+        
+        // Init
+        renderCars();
+    </script>
 </body>
 </html>
