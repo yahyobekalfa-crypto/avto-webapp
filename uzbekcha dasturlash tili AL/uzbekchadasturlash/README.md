@@ -1,0 +1,2 @@
+# uzbekchadasturlash
+zor

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uzbekchadasturlash"
+version = "1.0.1"
+description = "AL (Algoritm Tili) - O'zbekcha Dasturlash Tili. Python asosida to'liq o'zbekcha sintaksisga ega dasturlash tili."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "AL Team", email = "uzbekchadasturlash@gmail.com"}
+]
+keywords = ["uzbek", "uzbekcha", "dasturlash", "tili", "programming", "language", "algoritm", "AL"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Natural Language :: Uzbek",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Interpreters",
+    "Topic :: Education",
+]
+
+[project.optional-dependencies]
+mobil = ["kivy>=2.0.0"]
+web = ["flask>=2.0.0"]
+aql = ["numpy>=1.20.0", "scikit-learn>=1.0.0"]
+full = ["kivy>=2.0.0", "flask>=2.0.0", "numpy>=1.20.0", "scikit-learn>=1.0.0"]
+
+[project.scripts]
+al = "cli:main"
+
+[project.urls]
+Homepage = "https://github.com/yahyobekalfa-crypto/uzbekchadasturlash"
+Documentation = "https://github.com/yahyobekalfa-crypto/uzbekchadasturlash#readme"
+Repository = "https://github.com/yahyobekalfa-crypto/uzbekchadasturlash"
+
+[tool.setuptools.packages.find]
+include = ["al*", "kutubxona*", "modullar*"]

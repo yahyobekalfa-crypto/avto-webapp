@@ -1,0 +1,14 @@
+# AL (Algoritm Tili) - Talablar
+
+# Asosiy (minimal)
+# Standart Python kutubxonalari ishlatiladi
+
+# Mobil ilova uchun (ixtiyoriy)
+kivy>=2.0.0
+
+# Web rivojlantirish uchun (ixtiyoriy, kengaytirilgan)
+flask>=2.0.0
+
+# Sun'iy intellekt uchun (ixtiyoriy, kengaytirilgan)
+numpy>=1.20.0
+scikit-learn>=1.0.0

@@ -1,0 +1,4 @@
+"""
+AL Modullar
+Ixtisoslashgan modullar
+"""

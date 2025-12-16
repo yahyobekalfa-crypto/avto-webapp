@@ -1,0 +1,16 @@
+
+[aql]
+numpy>=1.20.0
+scikit-learn>=1.0.0
+
+[full]
+kivy>=2.0.0
+flask>=2.0.0
+numpy>=1.20.0
+scikit-learn>=1.0.0
+
+[mobil]
+kivy>=2.0.0
+
+[web]
+flask>=2.0.0

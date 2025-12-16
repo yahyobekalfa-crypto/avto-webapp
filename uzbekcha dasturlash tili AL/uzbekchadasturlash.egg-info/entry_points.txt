@@ -1,0 +1,2 @@
+[console_scripts]
+al = cli:main

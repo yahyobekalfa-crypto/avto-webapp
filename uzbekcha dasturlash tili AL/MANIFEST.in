@@ -1,0 +1,6 @@
+include README.md
+include requirements.txt
+recursive-include misollar *.al *.py
+recursive-include al *.py
+recursive-include kutubxona *.py
+recursive-include modullar *.py
